@@ -1,0 +1,15 @@
+# Dependências
+node_modules/
+
+# Credenciais e variáveis de ambiente
+.env
+.env.*
+!.env.example
+cypress.env.json
+
+# Evidências de execução
+cypress/screenshots/
+cypress/videos/
+
+# Logs
+npm-debug.log*
