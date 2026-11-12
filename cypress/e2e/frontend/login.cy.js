@@ -1,5 +1,31 @@
 import LoginPage from '../../support/pages/LoginPage';
 
+const API_URL = 'https://serverest.dev';
+
+function gerarUsuario() {
+  const identificador = `${Date.now()}${Math.floor(Math.random() * 1000)}`;
+
+  return {
+    nome: 'Usuario Teste QA',
+    email: `teste${identificador}@qa.com`,
+    password: '12345678',
+    administrador: 'false'
+  };
+}
+
+function cadastrarUsuario(usuario) {
+  return cy.request({
+    method: 'POST',
+    url: `${API_URL}/usuarios`,
+    body: usuario
+  }).then((response) => {
+    expect(response.status).to.eq(201);
+    expect(response.body.message).to.eq('Cadastro realizado com sucesso');
+
+    return usuario;
+  });
+}
+
 describe('Funcionalidade de Login - ServeRest', () => {
 
   const loginPage = new LoginPage();
@@ -9,36 +35,36 @@ describe('Funcionalidade de Login - ServeRest', () => {
   });
 
   it('CT001 - Deve realizar login com credenciais válidas', () => {
-    const email = Cypress.env('userEmail');
-    const password = Cypress.env('userPassword');
+    const usuario = gerarUsuario();
 
-    expect(email, 'E-mail configurado').to.be.a('string').and.not.be.empty;
-    expect(password, 'Senha configurada').to.be.a('string').and.not.be.empty;
+    cadastrarUsuario(usuario).then((usuarioCadastrado) => {
+      loginPage.login(usuarioCadastrado.email, usuarioCadastrado.password);
 
-    loginPage.login(email, password);
-
-    cy.location('pathname').should('not.eq', '/login');
+      cy.location('pathname').should('not.eq', '/login');
+    });
   });
 
   it('CT002 - Não deve realizar login com senha inválida', () => {
-    const email = Cypress.env('userEmail');
+    const usuario = gerarUsuario();
 
-    loginPage.login(email, 'senha_incorreta');
+    cadastrarUsuario(usuario).then((usuarioCadastrado) => {
+      loginPage.login(usuarioCadastrado.email, 'senha_incorreta');
 
-    cy.location('pathname').should('eq', '/login');
+      cy.location('pathname').should('eq', '/login');
+    });
   });
 
   it('CT003 - Não deve realizar login com campos vazios', () => {
     cy.get('button[type="submit"]').click();
 
     cy.contains('Email é obrigatório')
-     .should('be.visible');
+      .should('be.visible');
 
     cy.contains('Password é obrigatório')
-    .should('be.visible');
- 
+      .should('be.visible');
+
     cy.location('pathname')
-     .should('eq', '/login');
+      .should('eq', '/login');
   });
 
 });

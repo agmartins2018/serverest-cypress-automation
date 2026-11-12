@@ -1,11 +1,12 @@
 {
   "name": "serverest-cypress-automation",
   "version": "1.0.0",
-  "description": "",
+  "description": "Projeto de automação de testes Frontend e API com Cypress e JavaScript",
   "main": "index.js",
   "scripts": {
     "cy:open": "cypress open",
     "cy:run": "cypress run",
+    "test": "cypress run",
     "test:frontend": "cypress run --spec 'cypress/e2e/frontend/**/*.cy.js'",
     "test:api": "cypress run --spec 'cypress/e2e/api/**/*.cy.js'"
   },
@@ -13,7 +14,13 @@
     "type": "git",
     "url": "git+https://github.com/agmartins2018/serverest-cypress-automation.git"
   },
-  "keywords": [],
+  "keywords": [
+    "cypress",
+    "javascript",
+    "qa",
+    "automation",
+    "serverest"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
